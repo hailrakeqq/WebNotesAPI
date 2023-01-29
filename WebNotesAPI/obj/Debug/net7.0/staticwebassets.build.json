@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "j/dpQuScU4EMnfhUXQvommxfslaAoHt/bwXQ/+P8vXk=",
+  "Source": "WebNotesAPI",
+  "BasePath": "_content/WebNotesAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebNotesAPI/wwwroot",
+      "Source": "WebNotesAPI",
+      "ContentRoot": "/home/hailrake/media/code/WebNotesAPI/WebNotesAPI/wwwroot/",
+      "BasePath": "_content/WebNotesAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}
