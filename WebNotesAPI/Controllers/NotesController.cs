@@ -77,4 +77,14 @@ public class NotesController : Controller
 
         return NotFound();
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteAllNotes()
+    {
+        foreach (var note in noteDbContext.notes)
+            noteDbContext.notes.Remove(note);
+
+        await noteDbContext.SaveChangesAsync();
+        return Ok();
+    }
 }
