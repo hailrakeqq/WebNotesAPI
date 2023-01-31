@@ -24,17 +24,17 @@ function ViewNotePage() {
             fetch('http://localhost:5013/api/Notes', {
                 method: 'POST',
                 headers: {
-                    "Access-Control-Allow-Origin": "*",
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(note)
-            }).then(response => response.json())
-
-            // clear input and close modal window and refresh page for render new note
-            title = ""
-            description = ""
-            setModalActive(false)
-            document.location.reload(true)
+            }).then(responce => responce.json())
+                // clear input and close modal window and refresh page for render new note
+                .then(() => {
+                    title = ""
+                    description = ""
+                    setModalActive(false)
+                    document.location.reload(false)
+                })
         }
     }
 
