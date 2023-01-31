@@ -1,35 +1,31 @@
-import { Component } from 'react'
+import React, { useEffect, useState } from 'react';
 import '../components/ViewNotePage.css'
 
-
-/*to do:
-    add render  note from db
+/*to do
     add change page(+ delete function)
 */
+
 function ViewNotePage() {
-    let getAllNote = () => {
-        fetch('http://localhost:5013/api/Notes')
-            .then(data => data.json)
-            .then(data => console.log(data))
+    const [note, setNote] = useState([]);
+
+    const fetchData = () => {
+        return fetch('http://localhost:5013/api/Notes')
+            .then(data => data.json())
+            .then(responce => setNote(responce.reverse()))
     }
-    let renderNote = (notes) => {
-        let allNote = ''
-        const notesField = document.getElementById('notes-page');
-        notes.forEach(note => {
-            const noteElement = `
-                                <div class="note">
-                                    <h3>${note.title}</h3>
-                                    <p>${note.description}</p>
-                                </div>
-                                `
-            allNote += noteElement
-        })
-        notesField.innerHTML = allNote;
-    }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
 
     return (
-        <div class="notes-page" >
-
+        <div class="notes-page" id="notes-container">
+            {note && note.length > 0 && note.map((noteObj, index) => (
+                <div class="note">
+                    <h3>{noteObj.title}</h3>
+                    <p>{noteObj.description}</p>
+                </div>
+            ))}
         </div>
     );
 }
