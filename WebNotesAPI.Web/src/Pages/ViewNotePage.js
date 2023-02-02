@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import '../css/ViewNotePage.css'
 import { Modal } from '../components/Modal.js';
-// import { AddNote } from '../AddNote.js'
+
 /*to do
-    add modal window to change note(+ delete function )
+    add modal window to change note
 */
 
 function ViewNotePage() {
     const [note, setNote] = useState([]);
     const [modalActive, setModalActive] = useState(false)
+    const deleteButton = document.querySelector('#btnDelete')
 
     const addNote = () => {
         let title = document.getElementById('title').value
@@ -38,15 +39,17 @@ function ViewNotePage() {
         }
     }
 
-    const openAddNoteForm = () => {
-        document.getElementById('title').value = ''
-        document.getElementById('description').value = ''
-        setModalActive(true)
+    const deleteNote = () => {
+        fetch(`http://localhost:5013/api/Notes/${deleteButton.dataset.id}`, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(responce => {
+            setModalActive(false)
+            document.location.reload(false)
+        })
     }
-
-    // const deleteNote = () => {
-    //     alert("test")
-    // }
 
     const fetchData = () => {
         return fetch('http://localhost:5013/api/Notes')
@@ -58,10 +61,19 @@ function ViewNotePage() {
         fetchData()
     }, [])
 
+
+    const openAddNoteForm = () => {
+        deleteButton.classList.add('hidden')
+        document.getElementById('title').value = ''
+        document.getElementById('description').value = ''
+        setModalActive(true)
+    }
+
     const generateChangeNoteForm = (note) => {
         document.getElementById('title').value = note.title
         document.getElementById('description').value = note.description
-        // document.getElementsByClassName('#delete-button').classList.remove("hidden")
+        deleteButton.classList.remove('hidden')
+        deleteButton.setAttribute('data-id', note.id)
         setModalActive(true)
     }
 
@@ -72,7 +84,7 @@ function ViewNotePage() {
     }
 
     document.querySelectorAll('.note').forEach(note => {
-        note.addEventListener('click', function (e) {
+        note.addEventListener('click', (e) => {
             openChangeNoteForm(note.dataset.id);
         })
     })
@@ -89,14 +101,14 @@ function ViewNotePage() {
                     </div>
                 ))}
 
-                {/* modal window with form for add note to db*/}
+                {/* modal window with form for add note to db or change current note*/}
                 <Modal active={modalActive} setActive={setModalActive}>
                     <input type="text" id="title" placeholder='Add title'></input>
                     <br />
                     <textarea rows="4" cols="50" id="description" name="description" placeholder='Add description'></textarea>
                     <br />
-                    <button onClick={addNote} type="submit" >Save</button>
-                    {/* <button class="delete-button hidden" onClick={deleteNote} type="submit">Delete</button> */}
+                    <button id="btnSave" class="btn-save" onClick={addNote} type="submit">Save</button>
+                    <button id="btnDelete" class="btn-delete hidden" onClick={deleteNote} type="submit">Delete</button>
                 </Modal>
             </div>
         </div>
