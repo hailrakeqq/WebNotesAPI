@@ -34,6 +34,20 @@
     cursor: pointer;
 }
 
+.delete-all-note-button {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    outline: none;
+    border: none;
+    background-color: #e74c3c;
+    color: #FFF;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
 .btn-delete {
     margin-bottom: 10px;
     outline: none;

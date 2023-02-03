@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react';
 import '../css/ViewNotePage.css'
 import { Modal } from '../components/Modal.js';
 
-/*to do
-    add modal window to change note
-*/
-
 function ViewNotePage() {
     const [note, setNote] = useState([]);
     const [modalActive, setModalActive] = useState(false)
+    const saveButton = document.querySelector('#btnSave')
     const deleteButton = document.querySelector('#btnDelete')
 
     const addNote = () => {
@@ -39,16 +36,54 @@ function ViewNotePage() {
         }
     }
 
-    const deleteNote = () => {
-        fetch(`http://localhost:5013/api/Notes/${deleteButton.dataset.id}`, {
+    const updateNote = (id) => {
+        let title = document.getElementById('title').value
+        let description = document.getElementById('description').value
+
+        if (title === "" || title === null || description === "" || description === null) {
+            alert("Please enter correct data")
+        } else {
+            const note = {
+                title: title,
+                description: description
+            }
+            fetch(`http://localhost:5013/api/Notes/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(note)
+            }).then(responce => responce.json())
+                // clear input and close modal window and refresh page for render new note
+                .then(() => {
+                    title = ""
+                    description = ""
+                    setModalActive(false)
+                    document.location.reload(false)
+                })
+        }
+    }
+
+    const deleteNote = (id) => {
+        fetch(`http://localhost:5013/api/Notes/${id}`, {
+
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json'
             }
-        }).then(responce => {
+        }).then(() => {
             setModalActive(false)
             document.location.reload(false)
         })
+    }
+
+    const deleteAllNotes = () => {
+        fetch(`http://localhost:5013/api/Notes/`, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(() => document.location.reload(false))
     }
 
     const fetchData = () => {
@@ -60,7 +95,6 @@ function ViewNotePage() {
     useEffect(() => {
         fetchData()
     }, [])
-
 
     const openAddNoteForm = () => {
         deleteButton.classList.add('hidden')
@@ -74,6 +108,7 @@ function ViewNotePage() {
         document.getElementById('description').value = note.description
         deleteButton.classList.remove('hidden')
         deleteButton.setAttribute('data-id', note.id)
+        saveButton.setAttribute('data-id', note.id)
         setModalActive(true)
     }
 
@@ -91,8 +126,8 @@ function ViewNotePage() {
 
     return (
         <div class="main">
-            <button class="add-note-button" onClick={openAddNoteForm}>Add Note Test</button>
-
+            <button class="add-note-button" onClick={openAddNoteForm}>Add Note (Test)</button>
+            <button class="delete-all-note-button" onClick={deleteAllNotes}>Delete All notes (DevTest)</button>
             <div class="notes-page" id="notes-container">
                 {note && note.length > 0 && note.map((noteObj, index) => (
                     <div class="note" data-id={noteObj.id} key={index}>
@@ -107,8 +142,13 @@ function ViewNotePage() {
                     <br />
                     <textarea rows="4" cols="50" id="description" name="description" placeholder='Add description'></textarea>
                     <br />
-                    <button id="btnSave" class="btn-save" onClick={addNote} type="submit">Save</button>
-                    <button id="btnDelete" class="btn-delete hidden" onClick={deleteNote} type="submit">Delete</button>
+                    <button id="btnSave" class="btn-save" onClick={() => {
+                        if (saveButton.dataset.id)
+                            updateNote(saveButton.dataset.id)
+                        else
+                            addNote()
+                    }} type="submit">Save</button>
+                    <button id="btnDelete" class="btn-delete hidden" onClick={() => deleteNote(deleteButton.dataset.id)} type="submit">Delete</button>
                 </Modal>
             </div>
         </div>
