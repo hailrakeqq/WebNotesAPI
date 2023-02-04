@@ -10,4 +10,5 @@ public class NotesDbContext : DbContext
     }
 
     public DbSet<Note> notes { get; set; }
+    public DbSet<User> users { get; set; }
 }

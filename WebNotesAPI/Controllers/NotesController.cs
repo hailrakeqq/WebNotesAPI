@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebNotesAPI.Data;
@@ -5,6 +6,8 @@ using WebNotesAPI.Models.Entities;
 
 namespace WebNotesAPI.Controllers;
 
+//this controller can use only athorized user
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class NotesController : Controller
