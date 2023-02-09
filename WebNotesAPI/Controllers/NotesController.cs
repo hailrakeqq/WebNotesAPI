@@ -6,7 +6,6 @@ using WebNotesAPI.Models.Entities;
 
 namespace WebNotesAPI.Controllers;
 
-//this controller can use only athorized user
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]

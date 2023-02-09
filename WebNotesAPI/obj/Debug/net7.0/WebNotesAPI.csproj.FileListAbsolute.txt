@@ -41,3 +41,10 @@
 /home/hailrake/media/code/WebNotesAPI/WebNotesAPI/obj/Debug/net7.0/WebNotesAPI.pdb
 /home/hailrake/media/code/WebNotesAPI/WebNotesAPI/obj/Debug/net7.0/WebNotesAPI.genruntimeconfig.cache
 /home/hailrake/media/code/WebNotesAPI/WebNotesAPI/obj/Debug/net7.0/ref/WebNotesAPI.dll
+/home/hailrake/media/code/WebNotesAPI/WebNotesAPI/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/hailrake/media/code/WebNotesAPI/WebNotesAPI/bin/Debug/net7.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/hailrake/media/code/WebNotesAPI/WebNotesAPI/bin/Debug/net7.0/Microsoft.IdentityModel.Logging.dll
+/home/hailrake/media/code/WebNotesAPI/WebNotesAPI/bin/Debug/net7.0/Microsoft.IdentityModel.Protocols.dll
+/home/hailrake/media/code/WebNotesAPI/WebNotesAPI/bin/Debug/net7.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/hailrake/media/code/WebNotesAPI/WebNotesAPI/bin/Debug/net7.0/Microsoft.IdentityModel.Tokens.dll
+/home/hailrake/media/code/WebNotesAPI/WebNotesAPI/bin/Debug/net7.0/System.IdentityModel.Tokens.Jwt.dll
