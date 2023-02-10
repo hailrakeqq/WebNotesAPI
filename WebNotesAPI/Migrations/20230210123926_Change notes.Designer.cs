@@ -12,8 +12,8 @@ using WebNotesAPI.Data;
 namespace WebNotesAPI.Migrations
 {
     [DbContext(typeof(NotesDbContext))]
-    [Migration("20230209172054_Add user")]
-    partial class Adduser
+    [Migration("20230210123926_Change notes")]
+    partial class Changenotes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,8 +34,8 @@ namespace WebNotesAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .HasColumnType("text");
@@ -47,9 +47,8 @@ namespace WebNotesAPI.Migrations
 
             modelBuilder.Entity("WebNotesAPI.Models.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");

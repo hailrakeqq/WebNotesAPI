@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebNotesAPI.Auth;
 using WebNotesAPI.Data;
 using WebNotesAPI.Models.Entities;
 
@@ -11,21 +12,28 @@ namespace WebNotesAPI.Controllers;
 [Route("api/[controller]")]
 public class NotesController : Controller
 {
-    private readonly NotesDbContext noteDbContext;
+    private readonly NotesDbContext _context;
+    private readonly CurrentUser _currentUser;
 
-    public NotesController(NotesDbContext noteDbContext)
+    public NotesController(NotesDbContext noteDbContext, CurrentUser currentUser)
     {
-        this.noteDbContext = noteDbContext;
+        _context = noteDbContext;
+        _currentUser = currentUser;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllNotes() => Ok(await noteDbContext.notes.ToListAsync());
+    public async Task<IActionResult> GetAllNotes()
+    {
+        var currentUser = _currentUser.GetCurrentUser();
+        return Ok(await _context.notes.Where(u => u.OwnerId == currentUser.Id).ToListAsync());
+    }
 
     [HttpGet]
     [Route("{id:Guid}")]
     public async Task<IActionResult> GetNoteById([FromRoute] Guid id)
     {
-        var existingNote = await noteDbContext.notes.FirstOrDefaultAsync(i => i.Id == id);
+        var currentUser = _currentUser.GetCurrentUser();
+        var existingNote = await _context.notes.FirstOrDefaultAsync(i => i.Id == id);
 
         if (existingNote != null)
             return Ok(existingNote);
@@ -36,10 +44,13 @@ public class NotesController : Controller
     [HttpPost]
     public async Task<IActionResult> AddNote(Note note)
     {
-        note.Id = Guid.NewGuid();
+        var currentUser = _currentUser.GetCurrentUser();
 
-        await noteDbContext.notes.AddAsync(note);
-        await noteDbContext.SaveChangesAsync();
+        note.Id = Guid.NewGuid();
+        note.OwnerId = currentUser.Id;
+
+        await _context.notes.AddAsync(note);
+        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetNoteById), new { id = note.Id }, note);
     }
@@ -48,14 +59,14 @@ public class NotesController : Controller
     [Route("{id:Guid}")]
     public async Task<IActionResult> UpdateNote([FromRoute] Guid id, [FromBody] Note updatedNote)
     {
-        var existingNote = await noteDbContext.notes.FirstOrDefaultAsync(x => x.Id == id);
+        var existingNote = await _context.notes.FirstOrDefaultAsync(x => x.Id == id);
 
         if (existingNote != null)
         {
             existingNote.Title = updatedNote.Title;
             existingNote.Description = updatedNote.Description;
 
-            await noteDbContext.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return Ok(existingNote);
         }
@@ -67,12 +78,12 @@ public class NotesController : Controller
     [Route("{id:Guid}")]
     public async Task<IActionResult> DeleteNote([FromRoute] Guid id)
     {
-        var existingNote = await noteDbContext.notes.FirstOrDefaultAsync(i => i.Id == id);
+        var existingNote = await _context.notes.FirstOrDefaultAsync(i => i.Id == id);
 
         if (existingNote != null)
         {
-            noteDbContext.notes.Remove(existingNote);
-            await noteDbContext.SaveChangesAsync();
+            _context.notes.Remove(existingNote);
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
@@ -83,10 +94,11 @@ public class NotesController : Controller
     [HttpDelete]
     public async Task<IActionResult> DeleteAllNotes()
     {
-        foreach (var note in noteDbContext.notes)
-            noteDbContext.notes.Remove(note);
+        var currentUser = _currentUser.GetCurrentUser();
+        foreach (var note in _context.notes.Where(u => u.OwnerId == currentUser.Id))
+            _context.notes.Remove(note);
 
-        await noteDbContext.SaveChangesAsync();
+        await _context.SaveChangesAsync();
         return Ok();
     }
 }

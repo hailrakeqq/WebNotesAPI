@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using WebNotesAPI.Auth;
+using WebNotesAPI.Controllers;
 using WebNotesAPI.Data;
 
 
@@ -24,17 +25,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllers();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CurrentUser>();
+
 builder.Services.AddTokenService();
 
 builder.Services.AddDbContext<NotesDbContext>(option => option.UseNpgsql(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
 
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(s =>
+builder.Services.AddSwaggerGen(c =>
 {
-    s.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Version = "V1",
         Title = "Note API",
