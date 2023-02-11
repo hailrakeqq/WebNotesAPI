@@ -11,6 +11,8 @@ const Layout = () => {
             <header class="layout_header">
                 <NavLink to='/'>Home  </NavLink>
                 <NavLink to='/ViewNotePage'>My Note </NavLink>
+                <NavLink to='/LoginPage'>Login</NavLink>
+                <NavLink to='/SigninPage'>Sign In</NavLink>
             </header>
             <Outlet />
         </>
