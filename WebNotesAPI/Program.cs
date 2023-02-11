@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using WebNotesAPI.Auth;
-using WebNotesAPI.Controllers;
 using WebNotesAPI.Data;
-
+using WebNotesAPI;
+using WebNotesAPI.Models.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +26,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<CurrentUser>();
 
+
+// builder.Services.AddTransient<CurrentUser>();
+builder.Services.AddCurrentUser();
 builder.Services.AddTokenService();
 
 builder.Services.AddDbContext<NotesDbContext>(option => option.UseNpgsql(
@@ -56,7 +58,7 @@ app.UseSwaggerUI(c =>
 });
 
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 

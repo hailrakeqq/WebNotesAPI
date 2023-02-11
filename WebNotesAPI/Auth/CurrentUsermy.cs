@@ -1,7 +1,7 @@
 // using System.Security.Claims;
 // using WebNotesAPI.Models.Entities;
 
-// namespace WebNotesAPI.Controllers;
+// namespace WebNotesAPI.Auth;
 
 // public class CurrentUser
 // {

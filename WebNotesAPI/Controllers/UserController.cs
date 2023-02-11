@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,21 +14,19 @@ public class UserController : Controller
 {
     private readonly NotesDbContext _context;
     private readonly ITokenService _tokenService;
-    private readonly CurrentUser _currentUser;
-    public UserController(NotesDbContext context, ITokenService tokenService, CurrentUser currentUser)
+    // private readonly CurrentUser? _currentUser = null;
+    public UserController(NotesDbContext context, ITokenService tokenService)//, CurrentUser currentUser)
     {
         _context = context;
         _tokenService = tokenService;
-        _currentUser = currentUser;
+        // _currentUser = currentUser;
     }
 
     [HttpGet("Admin")]
     [Authorize]
-    public IActionResult AdminsEndpoint()
+    public IActionResult AdminsEndpoint(CurrentUser currentUser)
     {
-        var currentUser = _currentUser.GetCurrentUser();
-
-        return Ok($"test: Hi {currentUser.Username} you are an {currentUser.Role} your id is {currentUser.Id}");
+        return Ok($"test:your name is {currentUser.Username} your id is {currentUser.Id}");
     }
 
     [HttpPost]
