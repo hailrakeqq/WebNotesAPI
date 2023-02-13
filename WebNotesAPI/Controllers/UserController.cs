@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebNotesAPI.Auth;
+using WebNotesAPI.Authorization;
 using WebNotesAPI.Data;
 using WebNotesAPI.Models.Entities;
 using WebNotesAPI.Tools;
@@ -14,12 +15,13 @@ public class UserController : Controller
 {
     private readonly NotesDbContext _context;
     private readonly ITokenService _tokenService;
-    // private readonly CurrentUser? _currentUser = null;
-    public UserController(NotesDbContext context, ITokenService tokenService)//, CurrentUser currentUser)
+    private readonly LoginResponce _loginResponce;
+
+    public UserController(NotesDbContext context, ITokenService tokenService, LoginResponce tokenResponce)
     {
         _context = context;
         _tokenService = tokenService;
-        // _currentUser = currentUser;
+        _loginResponce = tokenResponce;
     }
 
     [HttpGet("Admin")]
@@ -33,7 +35,7 @@ public class UserController : Controller
     [Route("Registration")]
     public async Task<IActionResult> CreateUser(User user)
     {
-        var currentUser = _context.users.FirstOrDefault(u => u.Email == user.Email ||
+        var currentUser = _context.users.FirstOrDefault(u => u.Email == user.Email &&
                                                              u.Username == user.Username);
 
         if (currentUser == null)
@@ -60,7 +62,12 @@ public class UserController : Controller
             u.Password == Toolchain.GenerateHash(userLoginModel.Password!));
 
         if (currentUser != null)
-            return Ok(_tokenService.GenerateToken(currentUser));
+        {
+            _loginResponce.Username = currentUser.Username;
+            _loginResponce.JWTToken = _tokenService.GenerateToken(currentUser);
+            _loginResponce.RefreshToken = "test";
+            return Ok(_loginResponce);
+        }
 
         return Unauthorized(currentUser);
     }

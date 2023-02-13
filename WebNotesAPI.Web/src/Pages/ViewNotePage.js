@@ -7,6 +7,7 @@ function ViewNotePage() {
     const [modalActive, setModalActive] = useState(false)
     const saveButton = document.querySelector('#btnSave')
     const deleteButton = document.querySelector('#btnDelete')
+    let jwtToken = localStorage.getItem('jwttoken');
 
     const addNote = () => {
         let title = document.getElementById('title').value
@@ -22,6 +23,7 @@ function ViewNotePage() {
             fetch('http://localhost:5013/api/Notes', {
                 method: 'POST',
                 headers: {
+                    'Authorization': `bearer ${jwtToken}`,
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(note)
@@ -50,6 +52,7 @@ function ViewNotePage() {
             fetch(`http://localhost:5013/api/Notes/${id}`, {
                 method: 'PUT',
                 headers: {
+                    'Authorization': `bearer ${jwtToken}`,
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(note)
@@ -69,6 +72,7 @@ function ViewNotePage() {
 
             method: 'DELETE',
             headers: {
+                'Authorization': `bearer ${jwtToken}`,
                 'content-type': 'application/json'
             }
         }).then(() => {
@@ -81,19 +85,26 @@ function ViewNotePage() {
         fetch(`http://localhost:5013/api/Notes/`, {
             method: 'DELETE',
             headers: {
+                'Authorization': `bearer ${jwtToken}`,
                 'content-type': 'application/json'
             }
         }).then(() => document.location.reload(false))
     }
 
     const fetchData = () => {
-        return fetch('http://localhost:5013/api/Notes')
-            .then(data => data.json())
+        return fetch('http://localhost:5013/api/Notes',
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `bearer ${jwtToken}`,
+                }
+            }).then(data => data.json())
             .then(responce => setNote(responce.reverse()))
     }
 
     useEffect(() => {
         fetchData()
+        // eslint-disable-next-line
     }, [])
 
     const openAddNoteForm = () => {
@@ -113,7 +124,12 @@ function ViewNotePage() {
     }
 
     const openChangeNoteForm = (id) => {
-        fetch(`http://localhost:5013/api/Notes/${id}`)
+        fetch(`http://localhost:5013/api/Notes/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `bearer ${jwtToken}`,
+            }
+        })
             .then(data => data.json())
             .then(response => generateChangeNoteForm(response))
     }
@@ -126,8 +142,11 @@ function ViewNotePage() {
 
     return (
         <div class="main">
-            <button class="add-note-button" onClick={openAddNoteForm}>Add Note (Test)</button>
-            <button class="delete-all-note-button" onClick={deleteAllNotes}>Delete All notes (DevTest)</button>
+            <div class="buttons">
+                <button class="add-note-button" style={{ padding: "10px" }} onClick={openAddNoteForm}>Add Note (Test)</button>
+                <button class="delete-all-note-button" style={{ padding: "10px" }} onClick={deleteAllNotes}>Delete All notes (DevTest)</button>
+            </div>
+
             <div class="notes-page" id="notes-container">
                 {note && note.length > 0 && note.map((noteObj, index) => (
                     <div class="note" data-id={noteObj.id} key={index}>

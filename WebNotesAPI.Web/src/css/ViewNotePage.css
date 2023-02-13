@@ -1,5 +1,5 @@
 .notes-page {
-    width: 100%;
+    width: 90%;
     padding: 50px;
     flex: 1;
     display: flex;
@@ -78,4 +78,13 @@
 .note p {
     max-height: 200px;
     /* overflow: auto; */
+}
+
+.buttons {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

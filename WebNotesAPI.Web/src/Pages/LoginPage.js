@@ -1,9 +1,15 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/LoginPage.css'
 function LoginPage() {
+    const navigate = useNavigate();
+    useEffect(() => {
+        localStorage.clear()
+    }, [])
     const Login = () => {
         let email = document.getElementById('email').value;
         let password = document.getElementById('password').value;
-        console.log('try to login');
+
         if (email !== '' && email !== null &&
             password !== '' && password !== null) {
             let user = {
@@ -17,7 +23,14 @@ function LoginPage() {
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(user)
-            }).then(response => console.log(response))
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    localStorage.setItem("username", data.username)
+                    localStorage.setItem("jwttoken", data.jwtToken)
+                    navigate('/ViewNotePage');
+                })
         }
 
     }

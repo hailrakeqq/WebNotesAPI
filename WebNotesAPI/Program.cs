@@ -6,6 +6,7 @@ using WebNotesAPI.Auth;
 using WebNotesAPI.Data;
 using WebNotesAPI;
 using WebNotesAPI.Models.Entities;
+using WebNotesAPI.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,9 +29,9 @@ builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 
 
-// builder.Services.AddTransient<CurrentUser>();
 builder.Services.AddCurrentUser();
 builder.Services.AddTokenService();
+builder.Services.AddLoginResponce();
 
 builder.Services.AddDbContext<NotesDbContext>(option => option.UseNpgsql(
     builder.Configuration.GetConnectionString("DefaultConnection")

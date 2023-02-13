@@ -1,5 +1,7 @@
+import { useNavigate } from 'react-router-dom';
 import '../css/LoginPage.css'
 function SigninPage() {
+    const navigate = useNavigate();
     const registerAccount = async () => {
         // const error = document.getElementById('error');
         let email = document.getElementById('email').value;
@@ -17,13 +19,20 @@ function SigninPage() {
                 username: username,
                 password: password
             }
-            await fetch('http://localhost:5013/api/User/Registration', {
+            const request = await fetch('http://localhost:5013/api/User/Registration', {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(user)
             })
+            const response = request;
+
+            if (response.status === 409)
+                alert("account already exist")
+            else
+                navigate('/LoginPage')
+
         }
 
     }
