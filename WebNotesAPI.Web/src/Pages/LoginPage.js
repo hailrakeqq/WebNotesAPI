@@ -26,8 +26,9 @@ function LoginPage() {
             }).then(response => response.json())
                 .then(data => {
                     console.log(data);
-
+                    localStorage.setItem("id", data.id)
                     localStorage.setItem("username", data.username)
+                    localStorage.setItem("role", data.role)
                     localStorage.setItem("jwttoken", data.jwtToken)
                     navigate('/ViewNotePage');
                 })

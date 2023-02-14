@@ -30,6 +30,7 @@ const Layout = () => {
                                         <i class="fa fa-caret-down"></i>
                                     </button>
                                     <div class="dropdown-content">
+                                        <NavLink to='/UserManagePage' style={{ padding: "10px" }}>My Account</NavLink>
                                         <NavLink to='/' onClick={logout} style={{ padding: "10px" }}>Logout</NavLink>
                                     </div>
                                 </div>

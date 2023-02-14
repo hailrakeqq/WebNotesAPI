@@ -10,6 +10,7 @@ using WebNotesAPI.Tools;
 namespace WebNotesAPI.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class UserController : Controller
 {
@@ -24,14 +25,8 @@ public class UserController : Controller
         _loginResponce = tokenResponce;
     }
 
-    [HttpGet("Admin")]
-    [Authorize]
-    public IActionResult AdminsEndpoint(CurrentUser currentUser)
-    {
-        return Ok($"test:your name is {currentUser.Username} your id is {currentUser.Id}");
-    }
-
     [HttpPost]
+    [AllowAnonymous]
     [Route("Registration")]
     public async Task<IActionResult> CreateUser(User user)
     {
@@ -54,6 +49,7 @@ public class UserController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [Route("Login")]
     public IActionResult Login([FromBody] UserLoginModel userLoginModel)
     {
@@ -63,7 +59,10 @@ public class UserController : Controller
 
         if (currentUser != null)
         {
+            _loginResponce.Id = currentUser.Id;
+            _loginResponce.Email = currentUser.Email;
             _loginResponce.Username = currentUser.Username;
+            _loginResponce.Role = currentUser.Role;
             _loginResponce.JWTToken = _tokenService.GenerateToken(currentUser);
             _loginResponce.RefreshToken = "test";
             return Ok(_loginResponce);
@@ -72,19 +71,113 @@ public class UserController : Controller
         return Unauthorized(currentUser);
     }
 
-    [HttpDelete]
+    [HttpGet]
     [Route("{id:Guid}")]
-    [Authorize]
-    public async Task<IActionResult> DeleteUser([FromRoute] string id)
+    public async Task<IActionResult> GetUser([FromRoute] string id)
+    {
+        var user = await _context.users.FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user != null)
+            return Ok(user);
+        return NotFound();
+    }
+
+    [HttpPut]
+    [Route("ChangeEmail/{id:Guid}")]
+    public async Task<IActionResult> ChangeUserEmail([FromRoute] string id, [FromBody] UserChangeDataModel newUserData)
     {
         var existingUser = await _context.users.FirstOrDefaultAsync(i => i.Id == id);
 
         if (existingUser != null)
         {
-            _context.users.Remove(existingUser);
-            await _context.SaveChangesAsync();
+            if (existingUser.Password == Toolchain.GenerateHash(newUserData.ConfirmPassword!))
+            {
+                existingUser.Email = newUserData.Email;
+                await _context.SaveChangesAsync();
 
-            return Ok();
+                return Ok("Your e-mail has been changed successfully.");
+            }
+            return Unauthorized("You enter wrong password");
+        }
+        return NotFound();
+    }
+
+    [HttpPut]
+    [Route("ChangeUsername/{id:Guid}")]
+    public async Task<IActionResult> ChangeUsername([FromRoute] string id, [FromBody] UserChangeDataModel newUserData)
+    {
+        var existingUser = await _context.users.FirstOrDefaultAsync(i => i.Id == id);
+
+        if (existingUser != null)
+        {
+            if (existingUser.Password == Toolchain.GenerateHash(newUserData.ConfirmPassword!))
+            {
+                existingUser.Username = newUserData.Username;
+                await _context.SaveChangesAsync();
+
+                return Ok("Your username has been changed successfully.");
+            }
+            return Unauthorized("You enter wrong password");
+        }
+        return NotFound();
+    }
+
+    [HttpPut]
+    [Route("ChangePassword/{id:Guid}")]
+    public async Task<IActionResult> ChangeUserPassword([FromRoute] string id, [FromBody] UserChangeDataModel newUserData)
+    {
+        var existingUser = await _context.users.FirstOrDefaultAsync(i => i.Id == id);
+
+        if (existingUser != null)
+        {
+            if (existingUser.Password == Toolchain.GenerateHash(newUserData.ConfirmPassword!))
+            {
+                existingUser.Password = Toolchain.GenerateHash(newUserData.Password!);
+                await _context.SaveChangesAsync();
+
+                return Ok("Your password has been changed successfully.");
+            }
+            return Unauthorized("You enter wrong password");
+        }
+        return NotFound();
+    }
+
+    [HttpPut]
+    [Route("PromoteToAdmin/{id:Guid}")]
+    public async Task<IActionResult> PromoteToAdmin([FromRoute] string id, [FromBody] string userWhoPromotedId)
+    {
+        var existingUser = await _context.users.FirstOrDefaultAsync(u => u.Id == id);
+        var userWhoPromoted = await _context.users.FirstOrDefaultAsync(u => u.Id == userWhoPromotedId && u.Role == "admin");
+
+        if (existingUser != null)
+        {
+            if (userWhoPromoted != null)
+                existingUser.Role = "admin";
+            await _context.SaveChangesAsync();
+            return Ok($"User {existingUser.Username} was promoted to admin");
+        }
+        return NotFound();
+    }
+
+    [HttpDelete]
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] string id, [FromBody] UserChangeDataModel newUserData)
+    {
+        var existingUser = await _context.users.FirstOrDefaultAsync(i => i.Id == id);
+
+        if (existingUser != null)
+        {
+            if (existingUser.Password == Toolchain.GenerateHash(newUserData.ConfirmPassword!))
+            {
+                foreach (var note in _context.notes.Where(u => u.OwnerId == existingUser.Id))
+                    _context.notes.Remove(note);
+
+                _context.users.Remove(existingUser);
+                await _context.SaveChangesAsync();
+
+                return Ok("You successfully delete your account");
+            }
+            return Unauthorized("You enter wrong password");
         }
 
         return NotFound();
