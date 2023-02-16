@@ -12,7 +12,7 @@ const Layout = () => {
         navigate('/');
     }
     const currentUser = localStorage.getItem('username')
-
+    const userRole = localStorage.getItem('role')
     return (
         <>
             <header class="layout_header">
@@ -31,6 +31,10 @@ const Layout = () => {
                                     </button>
                                     <div class="dropdown-content">
                                         <NavLink to='/UserManagePage' style={{ padding: "10px" }}>My Account</NavLink>
+                                        {userRole === 'admin' ?
+                                            <NavLink to='/AdminPage' style={{ padding: "10px" }}>Admin Page</NavLink>
+                                            : <></>
+                                        }
                                         <NavLink to='/' onClick={logout} style={{ padding: "10px" }}>Logout</NavLink>
                                     </div>
                                 </div>

@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using WebNotesAPI.Models.Entities;
 
 namespace WebNotesAPI;
 

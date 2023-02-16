@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebNotesAPI.Auth;
 using WebNotesAPI.Data;
 using WebNotesAPI.Models.Entities;
 

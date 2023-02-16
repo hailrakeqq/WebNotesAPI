@@ -5,7 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using WebNotesAPI.Auth;
 using WebNotesAPI.Data;
 using WebNotesAPI;
-using WebNotesAPI.Models.Entities;
 using WebNotesAPI.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);

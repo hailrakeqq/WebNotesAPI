@@ -1,15 +1,21 @@
 import { Modal } from '../components/Modal.js';
 import React, { useEffect, useState } from 'react';
 import '../css/UserManagePage.css'
+import { useNavigate } from 'react-router-dom';
 
-/*
-    implement all 3 function
-*/
+
+/**
+ * 
+ * fix error when click on button which should open modal window works reques function also
+ */
 function UserManagePage() {
     const jwtToken = localStorage.getItem('jwttoken')
     const [user, setUser] = useState({});
     const [modalActive, setModalActive] = useState(false)
     const modalContent = document.getElementById('modal-content')
+    const navigate = useNavigate()
+    const succesfullyResponceMessage = "Your new data has been successfully saved"
+    const errorResponceMessage = "An error has occurred when we try to change your new data :("
 
     const getUser = () => {
         fetch(`http://localhost:5013/api/User/${localStorage.getItem('id')}`, {
@@ -25,6 +31,43 @@ function UserManagePage() {
     // eslint-disable-next-line
     useEffect(() => getUser(), user)
 
+    const createPUTRequest = (request, data) => {
+        const sendedRequest = fetch(`http://localhost:5013/api/User/${request}/${localStorage.getItem('id')}`, {
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `bearer ${jwtToken}`,
+            },
+            body: JSON.stringify(data)
+        })
+
+        return sendedRequest
+    }
+
+    const changeEmail = () => {
+        let newEmail = document.getElementById('new-email').value;
+        let checkPassword = document.getElementById('check-password').value
+
+        if (newEmail !== "" && newEmail !== null && checkPassword !== "" && checkPassword !== null) {
+            let data = {
+                "email": newEmail,
+                "confirmPassword": checkPassword
+            }
+            createPUTRequest('ChangeEmail', data).then(response => {
+                if (response.status === 200) {
+                    alert(succesfullyResponceMessage)
+                    setModalActive(false)
+                    document.location.reload(false)
+                } else {
+                    alert(errorResponceMessage)
+                    newEmail = ""
+                    checkPassword = ""
+                }
+            })
+        }
+        else alert("You enter uncorrect data")
+    }
+
     const changeEmailModal = () => {
         modalContent.innerHTML =
             "<p>Change Email...</p>" +
@@ -35,50 +78,129 @@ function UserManagePage() {
             "<input type=\"text\" id=\"check-password\" placeholder='Password for confirm...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id=\"btnSave\" class=\"btn-save\" type=\"submit\" onClick={changeEmail}>Save</button>"
-        setModalActive(true)
-    }
-    const changeEmail = () => {
+            "<button id='changeEmailBtn' class=\"btn-save\" type=\"submit\">Save</button>"
 
+        setModalActive(true)
+        document.getElementById('changeEmailBtn').addEventListener('click', changeEmail)
+    }
+
+    const changeUsername = () => {
+        let newUsername = document.getElementById('new-username').value;
+        let checkPassword = document.getElementById('check-password').value
+        if (newUsername !== null && checkPassword !== null && newUsername !== "" && checkPassword !== "") {
+            const data = {
+                "username": newUsername,
+                "confirmPassword": checkPassword
+            }
+            createPUTRequest("ChangeUsername", data)
+                .then(response => {
+                    if (response.status === 200) {
+                        alert(succesfullyResponceMessage)
+                        localStorage.setItem('username', newUsername)
+                        setModalActive(false)
+                        document.location.reload(false)
+                    }
+                    else {
+                        alert(errorResponceMessage)
+                        newUsername = ""
+                        checkPassword = ""
+                    }
+                })
+
+        }
     }
 
     const changeUsernameModal = () => {
         modalContent.innerHTML =
             "<p>Change Username...</p>" +
             "<br />" +
-            "<input type=\"text\" id=\"new-email\" placeholder='Enter new username...'></input>" +
+            "<input type=\"text\" id=\"new-username\" placeholder='Enter new username...'></input>" +
             "<br />" +
             "<br />" +
             "<input type=\"text\" id=\"check-password\" placeholder='Password for confirm...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id=\"btnSave\" class=\"btn-save\" type=\"submit\" onClick={changeUsername}>Save</button>"
+            "<button id='changeUsernameBtn' class=\"btn-save\" type=\"submit\">Save</button>"
+
         setModalActive(true)
+        document.getElementById('changeUsernameBtn').addEventListener('click', changeUsername)
     }
-    const changeUsername = () => { }
+
+    const changePassword = () => {
+        let oldPassword = document.getElementById('old-password').value;
+        let newPassword = document.getElementById('new-password').value
+        if (oldPassword !== null && newPassword !== null && oldPassword !== "" && newPassword !== "") {
+            const data = {
+                "password": newPassword,
+                "confirmPassword": oldPassword
+            }
+            createPUTRequest("ChangePassword", data)
+                .then(response => {
+                    console.log(response);
+                    if (response.status === 200) {
+                        alert(succesfullyResponceMessage)
+                        setModalActive(false)
+                        document.location.reload(false)
+                    } else {
+                        alert(errorResponceMessage)
+                        oldPassword = ""
+                        newPassword = ""
+                    }
+                })
+        }
+    }
 
     const changePasswordModal = () => {
         modalContent.innerHTML =
-            "<p>Change Username...</p>" +
+            "<p>Change Password...</p>" +
             "<br />" +
-            "<input type=\"text\" id=\"new-email\" placeholder='Enter old password...'></input>" +
-            "<br />" +
-            "<br />" +
-            "<input type=\"text\" id=\"check-password\" placeholder='Enter new password...'></input>" +
+            "<input type=\"text\" id=\"old-password\" placeholder='Enter old password...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id=\"btnSave\" class=\"btn-save\" type=\"submit\" onClick={changePassword}>Save</button>"
-        setModalActive(true)
-    }
-    const changePassword = () => { }
+            "<input type=\"text\" id=\"new-password\" placeholder='Enter new password...'></input>" +
+            "<br />" +
+            "<br />" +
+            "<button id='changePasswordBtn' class=\"btn-save\" type=\"submit\" >Save</button>"
 
+        setModalActive(true)
+        document.getElementById('changePasswordBtn').addEventListener('click', changePassword)
+    }
+
+
+    const deleteAccount = () => {
+        let confirmPassword = document.getElementById('confirmPassword').value
+        if (confirmPassword !== "" || confirmPassword !== null) {
+            fetch(`http://localhost:5013/api/User/${localStorage.getItem('id')}`, {
+                method: 'DELETE',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `bearer ${jwtToken}`,
+                },
+                body: JSON.stringify({
+                    "confirmPassword": confirmPassword
+                })
+            }).then(responce => {
+                if (responce.status === 200) {
+                    alert("You successfully delete your account")
+                    localStorage.clear();
+                    navigate('/');
+                } else {
+                    setModalActive(false)
+                    alert(errorResponceMessage)
+                }
+            })
+
+        }
+    }
     const deleteAccountModal = () => {
-        document.getElementById('modal-content').innerHTML =
-            "<p>Delete Account</p><br/><input type=\"text\" id=\"confirmPassword\" placeholder='Enter password for confirm..'></input><br/><br/>" +
-            " <button id=\"btnSave\" class=\"btn-save\" type=\"submit\">Delete Account</button>"
+        modalContent.innerHTML =
+            `<p>Delete Account</p><br/><input type='text' id='confirmPassword' placeholder='Enter password for confirm..'></input><br/><br/>` +
+            `<button id='btnDeleteAccount' class='btn-save' type='submit'>Delete Account</button>`
 
         setModalActive(true)
+        document.getElementById('btnDeleteAccount').addEventListener('click', deleteAccount);
     }
+
     return (
         <>
             <h3>Test user manage page</h3>
