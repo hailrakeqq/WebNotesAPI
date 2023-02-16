@@ -72,6 +72,17 @@ public class UserController : Controller
     }
 
     [HttpGet]
+    public async Task<IActionResult> GetAllUser([FromHeader] string ownerId)
+    {
+        var user = await _context.users.FirstOrDefaultAsync(u => u.Id == ownerId && u.Role == "admin");
+
+        if (user != null)
+            return Ok(_context.users.ToList());
+        return NotFound();
+    }
+
+
+    [HttpGet]
     [Route("{id:Guid}")]
     public async Task<IActionResult> GetUser([FromRoute] string id)
     {
