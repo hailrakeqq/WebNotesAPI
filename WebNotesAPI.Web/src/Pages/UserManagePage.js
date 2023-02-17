@@ -166,7 +166,6 @@ function UserManagePage() {
         document.getElementById('changePasswordBtn').addEventListener('click', changePassword)
     }
 
-
     const deleteAccount = () => {
         let confirmPassword = document.getElementById('confirmPassword').value
         if (confirmPassword !== "" || confirmPassword !== null) {
