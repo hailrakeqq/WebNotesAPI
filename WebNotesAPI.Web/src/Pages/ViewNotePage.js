@@ -5,8 +5,10 @@ import { Modal } from '../components/Modal.js';
 function ViewNotePage() {
     const [note, setNote] = useState([]);
     const [modalActive, setModalActive] = useState(false)
+    const [inputText, setInputText] = useState('');
     const saveButton = document.querySelector('#btnSave')
     const deleteButton = document.querySelector('#btnDelete')
+
     let jwtToken = localStorage.getItem('jwttoken');
 
     const addNote = () => {
@@ -140,15 +142,28 @@ function ViewNotePage() {
         })
     })
 
+    let inputHandler = (e) => {
+        var lowerCase = e.target.value.toLowerCase();
+        setInputText(lowerCase);
+    };
+    const filteredData = note.filter((note) => {
+        if (inputHandler.input === '')
+            return note;
+        else
+            return note.title.toLowerCase().includes(inputText) || note.description.toLowerCase().includes(inputText)
+    })
+
     return (
         <div class="main">
             <div class="buttons">
-                <button class="add-note-button" style={{ padding: "10px" }} onClick={openAddNoteForm}>Add Note (Test)</button>
+                <button class="add-note-button" style={{ padding: "10px" }} onClick={openAddNoteForm}>Add Note</button>
                 <button class="delete-all-note-button" style={{ padding: "10px" }} onClick={deleteAllNotes}>Delete All notes (DevTest)</button>
             </div>
 
+            <input type="search" class="search" id="search" onChange={inputHandler}></input>
+
             <div class="notes-page" id="notes-container">
-                {note && note.length > 0 && note.map((noteObj, index) => (
+                {note && note.length > 0 && filteredData.map((noteObj, index) => (
                     <div class="note" data-id={noteObj.id} key={index}>
                         <h3>{noteObj.title}</h3>
                         <p>{noteObj.description}</p>

@@ -155,19 +155,19 @@ public class UserController : Controller
 
     [HttpPut]
     [Route("PromoteToAdmin/{id:Guid}")]
-    public async Task<IActionResult> PromoteToAdmin([FromRoute] string id, [FromBody] string userWhoPromotedId)
+    public async Task<IActionResult> PromoteToAdmin([FromRoute] string id, [FromHeader] string adminId)
     {
         var existingUser = await _context.users.FirstOrDefaultAsync(u => u.Id == id);
-        var userWhoPromoted = await _context.users.FirstOrDefaultAsync(u => u.Id == userWhoPromotedId && u.Role == "admin");
+        var userWhoPromoted = await _context.users.FirstOrDefaultAsync(u => u.Id == adminId && u.Role == "admin");
 
         if (existingUser != null)
         {
-            if (userWhoPromoted != null)
+            if (userWhoPromoted != null && existingUser.Role != "admin")
                 existingUser.Role = "admin";
             await _context.SaveChangesAsync();
             return Ok($"User {existingUser.Username} was promoted to admin");
         }
-        return NotFound();
+        return NotFound("We can't find user, or user already had role \"admin\"");
     }
 
     [HttpDelete]
