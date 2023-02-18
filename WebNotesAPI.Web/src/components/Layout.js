@@ -18,8 +18,8 @@ const Layout = () => {
             <header class="layout_header">
                 <div class="navbar">
                     <div class="home-note-button">
-                        <NavLink to='/' style={{ padding: "10px", textDecoration: 'none' }}>Home  </NavLink>
-                        <NavLink to={currentUser !== null ? '/ViewNotePage' : '/LoginPage'} style={{ padding: "10px", textDecoration: 'none' }}>My Note </NavLink>
+                        <NavLink id="home-btn" to='/' style={{ padding: "10px", textDecoration: 'none' }}>Home  </NavLink>
+                        <NavLink id="view-note-btn" to={currentUser !== null ? '/ViewNotePage' : '/LoginPage'} style={{ padding: "10px", textDecoration: 'none' }}>My Note </NavLink>
                     </div>
                     <div class="dropdown">
                         {

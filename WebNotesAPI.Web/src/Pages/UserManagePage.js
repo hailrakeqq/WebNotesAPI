@@ -202,13 +202,15 @@ function UserManagePage() {
 
     return (
         <>
-            <h3>Test user manage page</h3>
-            <ul>
-                <li><p>Email: {user.email} <button class="manage-button" id="change-email-btn" onClick={changeEmailModal}>Change Email</button></p> </li>
-                <li><p>Username: {user.username} <button class="manage-button" id="change-username-btn" onClick={changeUsernameModal}>Change Username</button></p></li>
-                <li><p>Password <button class="manage-button" id="change-password-btn" onClick={changePasswordModal}>Change Password</button></p> </li>
-                <li><button id="delete-account-btn" onClick={deleteAccountModal}>Delete Account</button></li>
-            </ul>
+            <div class="main">
+                <h3>User manage page</h3>
+                <ul>
+                    <li><p>Email: {user.email} <button class="manage-button" id="change-email-btn" onClick={changeEmailModal}>Change Email</button></p> </li>
+                    <li><p>Username: {user.username} <button class="manage-button" id="change-username-btn" onClick={changeUsernameModal}>Change Username</button></p></li>
+                    <li><p>Password <button class="manage-button" id="change-password-btn" onClick={changePasswordModal}>Change Password</button></p> </li>
+                    <li><button id="delete-account-btn" onClick={deleteAccountModal}>Delete Account</button></li>
+                </ul>
+            </div>
 
             <Modal active={modalActive} setActive={setModalActive}>
                 <div id="modal-content"></div>
