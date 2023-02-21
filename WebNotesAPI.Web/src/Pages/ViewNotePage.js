@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../css/ViewNotePage.css'
 import { Modal } from '../components/Modal.js';
+import { useNavigate } from 'react-router-dom';
 
 function ViewNotePage() {
     const [note, setNote] = useState([]);
@@ -8,8 +9,14 @@ function ViewNotePage() {
     const [inputText, setInputText] = useState('');
     const saveButton = document.querySelector('#btnSave')
     const deleteButton = document.querySelector('#btnDelete')
-
     let jwtToken = localStorage.getItem('jwttoken');
+    const navigate = useNavigate()
+
+
+    let currentUser = localStorage.getItem('username')
+    if (currentUser === "" || currentUser === null)
+        navigate('/LoginPage');
+
 
     const addNote = () => {
         let title = document.getElementById('title').value
@@ -100,8 +107,10 @@ function ViewNotePage() {
                 headers: {
                     'Authorization': `bearer ${jwtToken}`,
                 }
-            }).then(data => data.json())
-            .then(responce => setNote(responce.reverse()))
+            }).then(data => data.status === 401 ? navigate('/LoginPage') : data.json())
+            .then(response => {
+                setNote(response.reverse())
+            })
     }
 
     useEffect(() => {

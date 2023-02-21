@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "../components/Modal";
 
 /*
    add input bar for search user
 */
 function AdminPage() {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const promoteButton = document.querySelectorAll('.promoteUserBtn');
     const [modalActive, setModalActive] = useState(false)
@@ -63,6 +65,7 @@ function AdminPage() {
 
     return (
         <div>
+            <button onClick={() => navigate('/')}>Go to my note</button>
             <h2>Admin Page</h2>
             <h3>User List</h3>
             <input type="search" class="search" id="search" onChange={inputHandler}></input>

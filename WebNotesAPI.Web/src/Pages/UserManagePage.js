@@ -203,6 +203,7 @@ function UserManagePage() {
     return (
         <>
             <div class="main">
+                <button onClick={() => navigate('/')}>Go to my note</button>
                 <h3>User manage page</h3>
                 <ul>
                     <li><p>Email: {user.email} <button class="manage-button" id="change-email-btn" onClick={changeEmailModal}>Change Email</button></p> </li>

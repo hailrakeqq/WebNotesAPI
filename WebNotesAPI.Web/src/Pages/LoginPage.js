@@ -6,6 +6,7 @@ function LoginPage() {
     useEffect(() => {
         localStorage.clear()
     }, [])
+
     const Login = () => {
         let email = document.getElementById('email').value;
         let password = document.getElementById('password').value;
@@ -29,7 +30,7 @@ function LoginPage() {
                         localStorage.setItem("username", data.username)
                         localStorage.setItem("role", data.role)
                         localStorage.setItem("jwttoken", data.jwtToken)
-                        navigate('/ViewNotePage');
+                        navigate('/');
                     })
                 else {
                     alert("you enter uncorrect data or account was not found")
