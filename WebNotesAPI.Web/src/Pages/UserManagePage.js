@@ -17,8 +17,8 @@ function UserManagePage() {
     const succesfullyResponceMessage = "Your new data has been successfully saved"
     const errorResponceMessage = "An error has occurred when we try to change your new data :("
 
-    const getUser = () => {
-        fetch(`http://localhost:5013/api/User/${localStorage.getItem('id')}`, {
+    const getUser = () => {//5013
+        fetch(`http://localhost:8088/api/User/${localStorage.getItem('id')}`, {
             method: 'GET',
             headers: {
                 'Authorization': `bearer ${jwtToken}`,
@@ -32,7 +32,7 @@ function UserManagePage() {
     useEffect(() => getUser(), user)
 
     const createPUTRequest = (request, data) => {
-        const sendedRequest = fetch(`http://localhost:5013/api/User/${request}/${localStorage.getItem('id')}`, {
+        const sendedRequest = fetch(`http://localhost:8088/api/User/${request}/${localStorage.getItem('id')}`, {
             method: 'PUT',
             headers: {
                 'content-type': 'application/json',
@@ -169,7 +169,7 @@ function UserManagePage() {
     const deleteAccount = () => {
         let confirmPassword = document.getElementById('confirmPassword').value
         if (confirmPassword !== "" || confirmPassword !== null) {
-            fetch(`http://localhost:5013/api/User/${localStorage.getItem('id')}`, {
+            fetch(`http://localhost:8088/api/User/${localStorage.getItem('id')}`, {
                 method: 'DELETE',
                 headers: {
                     'content-type': 'application/json',
@@ -203,6 +203,7 @@ function UserManagePage() {
     return (
         <>
             <div class="main">
+                <button onClick={() => navigate('/')}>Go to my note</button>
                 <h3>User manage page</h3>
                 <ul>
                     <li><p>Email: {user.email} <button class="manage-button" id="change-email-btn" onClick={changeEmailModal}>Change Email</button></p> </li>

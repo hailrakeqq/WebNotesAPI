@@ -33,8 +33,8 @@ builder.Services.AddTokenService();
 builder.Services.AddLoginResponce();
 
 builder.Services.AddDbContext<NotesDbContext>(option => option.UseNpgsql(
-    builder.Configuration.GetConnectionString("DefaultConnection")
-));
+    builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

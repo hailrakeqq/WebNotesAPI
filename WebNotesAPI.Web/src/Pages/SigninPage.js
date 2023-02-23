@@ -19,7 +19,7 @@ function SigninPage() {
                 username: username,
                 password: password
             }
-            const request = await fetch('http://localhost:5013/api/User/Registration', {
+            const request = await fetch('http://localhost:8088/api/User/Registration', {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
@@ -43,7 +43,6 @@ function SigninPage() {
                 <input type="text" id="username" required="required" placeholder="Username" />
                 <input type="password" id="password" required="required" placeholder="Password" />
                 <input type="password" id="repassword" required="required" placeholder="Enter password again" />
-                {/* <span id="error" class="error">please retype password</span> */}
                 <button onClick={registerAccount}>create</button>
                 <p class="message">Already registered? <a href="/LoginPage" >Sign In</a></p>
             </div>
