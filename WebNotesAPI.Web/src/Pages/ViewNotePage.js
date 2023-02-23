@@ -29,7 +29,7 @@ function ViewNotePage() {
                 title: title,
                 description: description
             }
-            fetch('http://localhost:5013/api/Notes', {
+            fetch('http://localhost:8088/api/Notes', {
                 method: 'POST',
                 headers: {
                     'Authorization': `bearer ${jwtToken}`,
@@ -58,7 +58,7 @@ function ViewNotePage() {
                 title: title,
                 description: description
             }
-            fetch(`http://localhost:5013/api/Notes/${id}`, {
+            fetch(`http://localhost:8088/api/Notes/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `bearer ${jwtToken}`,
@@ -77,7 +77,7 @@ function ViewNotePage() {
     }
 
     const deleteNote = (id) => {
-        fetch(`http://localhost:5013/api/Notes/${id}`, {
+        fetch(`http://localhost:8088/api/Notes/${id}`, {
 
             method: 'DELETE',
             headers: {
@@ -91,7 +91,7 @@ function ViewNotePage() {
     }
 
     const deleteAllNotes = () => {
-        fetch(`http://localhost:5013/api/Notes/`, {
+        fetch(`http://localhost:8088/api/Notes/`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `bearer ${jwtToken}`,
@@ -101,7 +101,7 @@ function ViewNotePage() {
     }
 
     const fetchData = () => {
-        return fetch('http://localhost:5013/api/Notes',
+        return fetch('http://localhost:8088/api/Notes',
             {
                 method: 'GET',
                 headers: {
@@ -135,7 +135,7 @@ function ViewNotePage() {
     }
 
     const openChangeNoteForm = (id) => {
-        fetch(`http://localhost:5013/api/Notes/${id}`, {
+        fetch(`http://localhost:8088/api/Notes/${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `bearer ${jwtToken}`,

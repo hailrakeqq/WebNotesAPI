@@ -17,7 +17,7 @@ function LoginPage() {
                 password: password
             }
 
-            fetch('http://localhost:5013/api/User/Login', {
+            fetch('http://localhost:8088/api/User/Login', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'
@@ -49,7 +49,7 @@ function LoginPage() {
                 <input type="text" id="email" required="required" placeholder="E-mail" />
                 <input type="password" id="password" required="required" placeholder="Password" />
                 <button onClick={Login}>login</button>
-                <p class="message">Not registered? <a href="/SigninPage">Create an account</a></p>
+                <p class="message">Not registered? <a onClick={() => navigate('/SigninPage')}>Create an account</a></p>
             </div>
         </div>
     );

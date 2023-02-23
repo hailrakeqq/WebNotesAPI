@@ -19,7 +19,7 @@ function SigninPage() {
                 username: username,
                 password: password
             }
-            const request = await fetch('http://localhost:5013/api/User/Registration', {
+            const request = await fetch('http://localhost:8088/api/User/Registration', {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'

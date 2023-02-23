@@ -15,7 +15,7 @@ function AdminPage() {
     const checkButton = document.getElementById('check-btn');
 
     let getAllUsers = () => {
-        fetch('http://localhost:5013/api/User', {
+        fetch('http://localhost:8088/api/User', {
             method: "GET",
             headers: {
                 'content-type': 'application/json',
@@ -32,7 +32,7 @@ function AdminPage() {
     }, {})
 
     const promoteUserToAdmin = (id) => {
-        fetch(`http://localhost:5013/api/User/PromoteToAdmin/${id}`, {
+        fetch(`http://localhost:8088/api/User/PromoteToAdmin/${id}`, {
             method: 'PUT',
             headers: {
                 'adminId': localStorage.getItem('id'),
