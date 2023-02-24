@@ -32,14 +32,12 @@ builder.Services.AddCurrentUser();
 builder.Services.AddTokenService();
 builder.Services.AddLoginResponce();
 
-builder.Services.AddDbContext<NotesDbContext>(option => option.UseNpgsql(
+builder.Services.AddDbContext<AppDbContext>(option => option.UseNpgsql(
     builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Version = "V1",

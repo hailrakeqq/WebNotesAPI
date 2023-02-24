@@ -14,11 +14,11 @@ namespace WebNotesAPI.Controllers;
 [ApiController]
 public class UserController : Controller
 {
-    private readonly NotesDbContext _context;
+    private readonly AppDbContext _context;
     private readonly ITokenService _tokenService;
     private readonly LoginResponce _loginResponce;
 
-    public UserController(NotesDbContext context, ITokenService tokenService, LoginResponce tokenResponce)
+    public UserController(AppDbContext context, ITokenService tokenService, LoginResponce tokenResponce)
     {
         _context = context;
         _tokenService = tokenService;

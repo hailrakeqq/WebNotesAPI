@@ -20,7 +20,7 @@ services:
       context: ./WebNotesAPI
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=User ID=postgres;Password=<Password>;Server=db;Port=5432;Database=notesapp
+      - ConnectionStrings__DefaultConnection=User ID=postgres;Password=Psibladeqqe13378;Server=db;Port=5433;Database=notesapp;Host=127.0.0.1;
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
@@ -33,7 +33,7 @@ services:
     image: postgres:latest
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=<Password>
+      - POSTGRES_PASSWORD=Psibladeqqe13378
       - POSTGRES_DB=notesapp
     ports:
       - "5433:5432"

@@ -1,2 +1,4 @@
+/docker-compose.yml
 notesapp-data/
 pgdata/
+/:USERPROFILE\.aspnet\https\aspnetapp.pfx

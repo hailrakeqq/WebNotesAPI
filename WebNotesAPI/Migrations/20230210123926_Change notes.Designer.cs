@@ -11,7 +11,7 @@ using WebNotesAPI.Data;
 
 namespace WebNotesAPI.Migrations
 {
-    [DbContext(typeof(NotesDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20230210123926_Change notes")]
     partial class Changenotes
     {
