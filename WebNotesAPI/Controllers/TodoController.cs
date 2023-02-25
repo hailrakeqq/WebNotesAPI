@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebNotesAPI.Data;
+using Microsoft.AspNetCore.Authorization;
 using WebNotesAPI.Models.Entities;
+
 
 namespace WebNotesAPI.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class TodoController : Controller
 {
@@ -20,16 +23,8 @@ public class TodoController : Controller
     public async Task<IActionResult> GetAllTodo(CurrentUser currentUser)
         => Ok(await _context.todos.Where(u => u.OwnerId == currentUser.Id).ToListAsync());
 
-    [HttpGet]
-    [Route("{id:Guid}")]
-    public async Task<IActionResult> GetTodoById(CurrentUser currentUser, [FromRoute] string id)
-    {
-        var todo = await _context.todos.FirstOrDefaultAsync(u => u.Id == id && u.OwnerId == currentUser.Id);
-
-        return todo != null ? Ok(todo) : NotFound();
-    }
-
     [HttpPost]
+    [Route("AddTodo")]
     public async Task<IActionResult> AddTodo(CurrentUser currentUser, [FromBody] Todo todo)
     {
         todo.Id = Guid.NewGuid().ToString();
@@ -37,7 +32,7 @@ public class TodoController : Controller
 
         await _context.todos.AddAsync(todo);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
+        return CreatedAtAction(nameof(GetAllTodo), new { id = todo.Id }, todo);
     }
 
     [HttpPut]

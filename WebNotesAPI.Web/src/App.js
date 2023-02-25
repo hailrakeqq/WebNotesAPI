@@ -7,6 +7,7 @@ import { UserManagePage } from './Pages/UserManagePage'
 import { AdminPage } from './Pages/AdminPage';
 import { Layout } from './components/Layout'
 import { NotFoundPage } from './Pages/NotFoundPage'
+import {TodoPage} from "./Pages/TodoPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='SigninPage' element={<SigninPage />} />
           <Route path='UserManagePage' element={<UserManagePage />} />
           <Route path='AdminPage' element={<AdminPage />} />
+          <Route path='TodoPage' element={<TodoPage/>}/>
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
