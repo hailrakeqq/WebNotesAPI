@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../components/Modal";
+import MyButton from "../components/MyButton";
 
 /*
    add input bar for search user
@@ -65,7 +66,7 @@ function AdminPage() {
 
     return (
         <div>
-            <button onClick={() => navigate('/')}>Go to my note</button>
+            <MyButton onClick={() => navigate('/')}>Go to my note</MyButton>
             <h2>Admin Page</h2>
             <h3>User List</h3>
             <input type="search" class="search" id="search" onChange={inputHandler}></input>
@@ -82,15 +83,15 @@ function AdminPage() {
                         <th class="email">{userObj.email}</th>
                         <th class="name">{userObj.username}</th>
                         <th>{userObj.role}</th>
-                        <button class="promoteUserBtn" data-id={userObj.id} onClick={() => setModalActive(true)} >Change User Role</button>
+                        <MyButton class="promoteUserBtn" data-id={userObj.id} onClick={() => setModalActive(true)} >Change User Role</MyButton>
                     </tr>
                 ))}
             </div>
             <Modal active={modalActive} setActive={setModalActive}>
                 <div>
                     <p>Are you sure to promote this user to admin?</p>
-                    <button id="check-btn" onClick={() => promoteUserToAdmin(checkButton.dataset.id)}>Yes</button>
-                    <button onClick={() => setModalActive(false)}>No</button>
+                    <MyButton id="check-btn" onClick={() => promoteUserToAdmin(checkButton.dataset.id)}>Yes</MyButton>
+                    <MyButton onClick={() => setModalActive(false)}>No</MyButton>
                 </div>
             </Modal>
         </div>

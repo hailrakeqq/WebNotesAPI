@@ -2,10 +2,10 @@ import { Modal } from '../components/Modal.js';
 import React, { useEffect, useState } from 'react';
 import '../css/UserManagePage.css'
 import { useNavigate } from 'react-router-dom';
-
+import MyInput from "../components/MyInput";
+import MyButton from "../components/MyButton";
 
 /**
- * 
  * fix error when click on button which should open modal window works reques function also
  */
 function UserManagePage() {
@@ -78,7 +78,7 @@ function UserManagePage() {
             "<input type=\"text\" id=\"check-password\" placeholder='Password for confirm...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id='changeEmailBtn' class=\"btn-save\" type=\"submit\">Save</button>"
+            "<MyButton id='changeEmailBtn' class=\"btn-save\" type=\"submit\">Save</MyButton>"
 
         setModalActive(true)
         document.getElementById('changeEmailBtn').addEventListener('click', changeEmail)
@@ -120,7 +120,7 @@ function UserManagePage() {
             "<input type=\"text\" id=\"check-password\" placeholder='Password for confirm...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id='changeUsernameBtn' class=\"btn-save\" type=\"submit\">Save</button>"
+            "<MyButton id='changeUsernameBtn' class=\"btn-save\" type=\"submit\">Save</MyButton>"
 
         setModalActive(true)
         document.getElementById('changeUsernameBtn').addEventListener('click', changeUsername)
@@ -160,7 +160,7 @@ function UserManagePage() {
             "<input type=\"text\" id=\"new-password\" placeholder='Enter new password...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id='changePasswordBtn' class=\"btn-save\" type=\"submit\" >Save</button>"
+            "<MyButton id='changePasswordBtn' class=\"btn-save\" type=\"submit\" >Save</MyButton>"
 
         setModalActive(true)
         document.getElementById('changePasswordBtn').addEventListener('click', changePassword)
@@ -194,7 +194,7 @@ function UserManagePage() {
     const deleteAccountModal = () => {
         modalContent.innerHTML =
             `<p>Delete Account</p><br/><input type='text' id='confirmPassword' placeholder='Enter password for confirm..'></input><br/><br/>` +
-            `<button id='btnDeleteAccount' class='btn-save' type='submit'>Delete Account</button>`
+            `<MyButton id='btnDeleteAccount' class='btn-save' type='submit'>Delete Account</MyButton>`
 
         setModalActive(true)
         document.getElementById('btnDeleteAccount').addEventListener('click', deleteAccount);
@@ -203,13 +203,13 @@ function UserManagePage() {
     return (
         <>
             <div class="main">
-                <button onClick={() => navigate('/')}>Go to my note</button>
+                <MyButton onClick={() => navigate('/')}>Go to my note</MyButton>
                 <h3>User manage page</h3>
                 <ul>
-                    <li><p>Email: {user.email} <button class="manage-button" id="change-email-btn" onClick={changeEmailModal}>Change Email</button></p> </li>
-                    <li><p>Username: {user.username} <button class="manage-button" id="change-username-btn" onClick={changeUsernameModal}>Change Username</button></p></li>
-                    <li><p>Password <button class="manage-button" id="change-password-btn" onClick={changePasswordModal}>Change Password</button></p> </li>
-                    <li><button id="delete-account-btn" onClick={deleteAccountModal}>Delete Account</button></li>
+                    <li><p>Email: {user.email} <MyButton class="manage-button" id="change-email-btn" onClick={changeEmailModal}>Change Email</MyButton></p> </li>
+                    <li><p>Username: {user.username} <MyButton class="manage-button" id="change-username-btn" onClick={changeUsernameModal}>Change Username</MyButton></p></li>
+                    <li><p>Password <MyButton class="manage-button" id="change-password-btn" onClick={changePasswordModal}>Change Password</MyButton></p> </li>
+                    <li><MyButton id="delete-account-btn" onClick={deleteAccountModal}>Delete Account</MyButton></li>
                 </ul>
             </div>
 

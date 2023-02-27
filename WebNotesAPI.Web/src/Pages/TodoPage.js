@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import '../css/TodoPage.css'
+import MyButton from "../components/MyButton";
+import MyInput from "../components/MyInput";
 
 function TodoPage() {
     const [todo, setTodo] = useState([]);
     let jwtToken = localStorage.getItem('jwttoken');
     const navigate = useNavigate()
-
-
+    
     let currentUser = localStorage.getItem('username')
     if (currentUser === "" || currentUser === null)
         navigate('/LoginPage');
@@ -23,12 +25,14 @@ function TodoPage() {
                 setTodo(response)
             })
     }
-
+    
     useEffect(() => {
         fetchData()
         // eslint-disable-next-line
     }, [])
+    
     const addTodo = () => {
+        console.log("test")
         let todoTitle = document.getElementById('todo-input').value
         if (todoTitle !== null && todoTitle !== "")
         {
@@ -56,19 +60,34 @@ function TodoPage() {
             }
         }).then(() => document.location.reload(false))
     }
+    
+    //TODO: add implement for change todo
+    const updateTodo = (title) => {
+        let todoTitle = document.getElementById('todo-input').value
+        todoTitle = title
+    }
+    
+    //TODO: add style to done todo(add iscomplete property to database and return this value in responce)
+    const doneTodo = () => {
+    }
 
     return(
         <>
         <h1>Test TodoPage</h1>
             <div>
-                <input type="text" id="todo-input" placeholder="Enter todo..."/>
-                <button id="save-button" onClick={addTodo}>Add!</button>
+                <MyInput type="text" id="todo-input" placeholder="Enter todo..."/>
+                <MyButton class='btn' id="save-button" onClick={addTodo}>Save todo!</MyButton>
             </div>
             <br/>
             <div id="todo-container">
                 {todo && todo.length > 0 && todo.map((todoObj, index) => (
-                    <div class="note" data-id={todoObj.id} key={index}>
-                        <h3>{todoObj.title} | <button onClick={() => deleteTodo(todoObj.id)}>delete</button></h3> 
+                    <div class="todo" data-id={todoObj.id} key={todoObj.id}>
+                        <h3>{todoObj.title} </h3>
+                        <div >
+                            <MyButton onClick={() => doneTodo(todoObj.title)}>Done</MyButton>
+                            <MyButton onClick={() => updateTodo(todoObj.id)}>Change</MyButton>
+                            <MyButton onClick={() => deleteTodo(todoObj.id)}>Delete</MyButton>
+                        </div>
                         <br/>
                     </div>
                 ))}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../css/ViewNotePage.css'
 import { Modal } from '../components/Modal.js';
 import { useNavigate } from 'react-router-dom';
+import MyInput from "../components/MyInput";
 
 function ViewNotePage() {
     const [note, setNote] = useState([]);
@@ -173,7 +174,7 @@ function ViewNotePage() {
 
             <div class="notes-page" id="notes-container">
                 {note && note.length > 0 && filteredData.map((noteObj, index) => (
-                    <div class="note" data-id={noteObj.id} key={index}>
+                    <div class="note" data-id={noteObj.id} key={noteObj.id}>
                         <h3>{noteObj.title}</h3>
                         <p>{noteObj.description}</p>
                     </div>
@@ -183,7 +184,9 @@ function ViewNotePage() {
                 <Modal active={modalActive} setActive={setModalActive}>
                     <input type="text" id="title" placeholder='Add title'></input>
                     <br />
+                    <br />
                     <textarea rows="4" cols="50" id="description" name="description" placeholder='Add description'></textarea>
+                    <br />
                     <br />
                     <button id="btnSave" class="btn-save" onClick={() => {
                         if (saveButton.dataset.id)
