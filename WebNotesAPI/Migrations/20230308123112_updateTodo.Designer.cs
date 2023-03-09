@@ -12,8 +12,8 @@ using WebNotesAPI.Data;
 namespace WebNotesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230224182452_AddTodo")]
-    partial class AddTodo
+    [Migration("20230308123112_updateTodo")]
+    partial class updateTodo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,9 @@ namespace WebNotesAPI.Migrations
 
                     b.Property<string>("Title")
                         .HasColumnType("text");
+
+                    b.Property<bool>("isComplete")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

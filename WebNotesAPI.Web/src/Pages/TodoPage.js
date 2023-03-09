@@ -1,15 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import '../css/TodoPage.css'
+import { Modal } from '../components/Modal.js';
 import MyButton from "../components/MyButton";
 import MyInput from "../components/MyInput";
 
 function TodoPage() {
-    const [todo, setTodo] = useState([]);
+    const [todos, setTodos] = useState([]);
+    const [todo, setTodo] = useState([])
+    const [modalActive, setModalActive] = useState(false)
     let jwtToken = localStorage.getItem('jwttoken');
     const navigate = useNavigate()
-    
     let currentUser = localStorage.getItem('username')
+    
     if (currentUser === "" || currentUser === null)
         navigate('/LoginPage');
 
@@ -22,7 +25,8 @@ function TodoPage() {
                 }
             }).then(data => data.status === 401 ? navigate('/LoginPage') : data.json())
             .then(response => {
-                setTodo(response)
+                console.log(response)
+                setTodos(response)
             })
     }
     
@@ -34,7 +38,7 @@ function TodoPage() {
     const addTodo = () => {
         console.log("test")
         let todoTitle = document.getElementById('todo-input').value
-        if (todoTitle !== null && todoTitle !== "")
+        if (isInputValidCheck(todoTitle))
         {
             const todo = {
                 title: todoTitle
@@ -51,8 +55,18 @@ function TodoPage() {
         }
         else alert("You must enter text")
     }
-
-    let deleteTodo = (id) => {
+    const getTodo = (id) => {
+         return  fetch(`http://localhost:8088/api/Todo/${id}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${jwtToken}`,
+            }
+        }).then(response => response.json())
+             .then(data => setTodo(data))
+    }
+   
+    const deleteTodo = (id) => {
         fetch(`http://localhost:8088/api/Todo/${id}`, {
             method: "DELETE",
             headers:{
@@ -61,14 +75,49 @@ function TodoPage() {
         }).then(() => document.location.reload(false))
     }
     
-    //TODO: add implement for change todo
-    const updateTodo = (title) => {
-        let todoTitle = document.getElementById('todo-input').value
-        todoTitle = title
+    //TODO: add implement for change todos
+    const openChangeTodoModalWindow = (id) => {
+        getTodo(id)
+        console.log(todo)
+        document.getElementById('todo-change-input').value = todo.title
+        setModalActive(true)
     }
     
-    //TODO: add style to done todo(add iscomplete property to database and return this value in responce)
-    const doneTodo = () => {
+    const doneTodo = (id) => {
+        getTodo(id)
+        todo.isComplete = true
+        sendPUTRequest(id, todo)
+    }
+    
+    const undoneTodo = (id) => {
+        getTodo(id)
+        todo.isComplete = false
+        sendPUTRequest(id, todo)
+    }
+    
+    const updateTodo = (id) =>{
+        const changeInputString = document.getElementById('todo-change-input').value
+        if(isInputValidCheck(changeInputString)){
+            todo.title = changeInputString
+            sendPUTRequest(id, todo);
+        } else {
+            alert('Input is not valid. Try again')
+        }
+    } 
+    
+    const sendPUTRequest = (id, todo) => {
+        fetch(`http://localhost:8088/api/Todo/${id}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${jwtToken}`,
+            },
+            body: JSON.stringify(todo)
+        }).then(response => response.status === 200 ? document.location.reload(false) : alert("Error"))
+    }
+    
+    const isInputValidCheck = (string) => {
+        return string !== null && string !== "" ? true : false
     }
 
     return(
@@ -80,13 +129,23 @@ function TodoPage() {
             </div>
             <br/>
             <div id="todo-container">
-                {todo && todo.length > 0 && todo.map((todoObj, index) => (
+                {todos && todos.length > 0 && todos.map((todoObj, index) => (
                     <div class="todo" data-id={todoObj.id} key={todoObj.id}>
+                        {
+                            todoObj.isComplete === true ? <p>&#9989;</p> : <p>&#10060;</p>
+                        }
                         <h3>{todoObj.title} </h3>
                         <div >
-                            <MyButton onClick={() => doneTodo(todoObj.title)}>Done</MyButton>
-                            <MyButton onClick={() => updateTodo(todoObj.id)}>Change</MyButton>
+                            {todoObj.isComplete === false ? 
+                                <MyButton class="doneBtn" onClick={() => doneTodo(todoObj.id)}>Done</MyButton> :
+                                <MyButton class="undoneBtn" onClick={() => undoneTodo(todoObj.id)}>undone</MyButton>
+                            }
+                            <MyButton onClick={() => openChangeTodoModalWindow(todoObj.id)}>Change</MyButton>
                             <MyButton onClick={() => deleteTodo(todoObj.id)}>Delete</MyButton>
+                            <Modal active={modalActive} setActive={setModalActive}>
+                                <MyInput type="text" id="todo-change-input" />
+                                <MyButton onClick={() => updateTodo(todoObj.id)}>Save!</MyButton>
+                            </Modal>
                         </div>
                         <br/>
                     </div>

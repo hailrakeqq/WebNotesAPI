@@ -180,7 +180,6 @@ function ViewNotePage() {
                     </div>
                 ))}
 
-                {/* modal window with form for add note to db or change current note*/}
                 <Modal active={modalActive} setActive={setModalActive}>
                     <input type="text" id="title" placeholder='Add title'></input>
                     <br />

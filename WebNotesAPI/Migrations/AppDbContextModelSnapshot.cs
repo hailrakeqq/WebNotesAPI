@@ -11,7 +11,7 @@ using WebNotesAPI.Data;
 namespace WebNotesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class NotesDbContextModelSnapshot : ModelSnapshot
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -52,6 +52,9 @@ namespace WebNotesAPI.Migrations
 
                     b.Property<string>("Title")
                         .HasColumnType("text");
+
+                    b.Property<bool>("isComplete")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

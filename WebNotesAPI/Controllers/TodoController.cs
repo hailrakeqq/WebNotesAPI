@@ -21,7 +21,17 @@ public class TodoController : Controller
 
     [HttpGet]
     public async Task<IActionResult> GetAllTodo(CurrentUser currentUser)
-        => Ok(await _context.todos.Where(u => u.OwnerId == currentUser.Id).ToListAsync());
+    {
+        return Ok(await _context.todos.Where(u => u.OwnerId == currentUser.Id).ToListAsync());
+    }
+
+    [HttpGet]
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> GetTodoById(string id)
+    {
+        var todo = await _context.todos.Where(u => u.Id == id).FirstOrDefaultAsync();
+        return todo != null ? Ok(todo) : NotFound();
+    }
 
     [HttpPost]
     [Route("AddTodo")]
@@ -44,9 +54,10 @@ public class TodoController : Controller
         if (existingTodo != null)
         {
             existingTodo.Title = todo.Title;
+            existingTodo.isComplete = todo.isComplete;
             await _context.SaveChangesAsync();
 
-            Ok(existingTodo);
+            return Ok(existingTodo);
         }
         return NotFound();
     }
