@@ -5,17 +5,14 @@
     text-decoration: none;
 }
 
-
 .navbar {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: right;
+    justify-content: right;
 }
-
 
 /* The dropdown container */
 .dropdown {
-
     float: right;
     padding-right: 100px;
     overflow: hidden;
@@ -27,7 +24,7 @@
     border: none;
     outline: none;
     color: rgb(5, 0, 0);
-    padding: 14px 16px;
+    padding: 10px 12px;
     background-color: inherit;
 
     /* Important for vertical align on mobile phones */
@@ -38,6 +35,16 @@
 /* Add a red background color to navbar links on hover */
 
 .dropdown:hover .dropbtn {
+    background-color: red;
+    color: rgb(255, 255, 255);
+}
+
+#home-btn:hover {
+    background-color: red;
+    color: rgb(255, 255, 255);
+}
+
+#view-note-btn:hover {
     background-color: red;
     color: rgb(255, 255, 255);
 }

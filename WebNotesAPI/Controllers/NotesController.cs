@@ -11,9 +11,9 @@ namespace WebNotesAPI.Controllers;
 [Route("api/[controller]")]
 public class NotesController : Controller
 {
-    private readonly NotesDbContext _context;
+    private readonly AppDbContext _context;
 
-    public NotesController(NotesDbContext noteDbContext)
+    public NotesController(AppDbContext noteDbContext)
     {
         _context = noteDbContext;
     }

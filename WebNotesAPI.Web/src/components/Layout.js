@@ -17,10 +17,11 @@ const Layout = () => {
         <>
             <header class="layout_header">
                 <div class="navbar">
-                    <div class="home-note-button">
-                        <NavLink to='/' style={{ padding: "10px", textDecoration: 'none' }}>Home  </NavLink>
-                        <NavLink to={currentUser !== null ? '/ViewNotePage' : '/LoginPage'} style={{ padding: "10px", textDecoration: 'none' }}>My Note </NavLink>
-                    </div>
+                    { <div class="home-note-button">
+                        {/*<NavLink id="home-btn" to='/' style={{ padding: "10px", textDecoration: 'none' }}>Home  </NavLink>*/}
+                        <NavLink id="view-note-btn" to={currentUser !== null ? '/' : '/LoginPage'} style={{ padding: "10px", textDecoration: 'none' }}>My Note </NavLink>
+                        <NavLink id="view-note-btn" to={currentUser !== null ? '/TodoPage' : '/LoginPage'} style={{ padding: "10px", textDecoration: 'none' }}>My Todo </NavLink>
+                    </div> }
                     <div class="dropdown">
                         {
                             currentUser === null ? <NavLink to='/LoginPage' style={{ padding: "10px", textDecoration: 'none' }}>Login</NavLink>

@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import '../css/ViewNotePage.css'
 import { Modal } from '../components/Modal.js';
+import { useNavigate } from 'react-router-dom';
+import MyInput from "../components/MyInput";
 
 function ViewNotePage() {
     const [note, setNote] = useState([]);
     const [modalActive, setModalActive] = useState(false)
+    const [inputText, setInputText] = useState('');
     const saveButton = document.querySelector('#btnSave')
     const deleteButton = document.querySelector('#btnDelete')
     let jwtToken = localStorage.getItem('jwttoken');
+    const navigate = useNavigate()
+
+
+    let currentUser = localStorage.getItem('username')
+    if (currentUser === "" || currentUser === null)
+        navigate('/LoginPage');
+
 
     const addNote = () => {
         let title = document.getElementById('title').value
@@ -20,7 +30,7 @@ function ViewNotePage() {
                 title: title,
                 description: description
             }
-            fetch('http://localhost:5013/api/Notes', {
+            fetch('http://localhost:8088/api/Notes', {
                 method: 'POST',
                 headers: {
                     'Authorization': `bearer ${jwtToken}`,
@@ -49,7 +59,7 @@ function ViewNotePage() {
                 title: title,
                 description: description
             }
-            fetch(`http://localhost:5013/api/Notes/${id}`, {
+            fetch(`http://localhost:8088/api/Notes/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `bearer ${jwtToken}`,
@@ -68,7 +78,7 @@ function ViewNotePage() {
     }
 
     const deleteNote = (id) => {
-        fetch(`http://localhost:5013/api/Notes/${id}`, {
+        fetch(`http://localhost:8088/api/Notes/${id}`, {
 
             method: 'DELETE',
             headers: {
@@ -82,7 +92,7 @@ function ViewNotePage() {
     }
 
     const deleteAllNotes = () => {
-        fetch(`http://localhost:5013/api/Notes/`, {
+        fetch(`http://localhost:8088/api/Notes/`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `bearer ${jwtToken}`,
@@ -92,14 +102,16 @@ function ViewNotePage() {
     }
 
     const fetchData = () => {
-        return fetch('http://localhost:5013/api/Notes',
+        return fetch('http://localhost:8088/api/Notes',
             {
                 method: 'GET',
                 headers: {
                     'Authorization': `bearer ${jwtToken}`,
                 }
-            }).then(data => data.json())
-            .then(responce => setNote(responce.reverse()))
+            }).then(data => data.status === 401 ? navigate('/LoginPage') : data.json())
+            .then(response => {
+                setNote(response.reverse())
+            })
     }
 
     useEffect(() => {
@@ -124,7 +136,7 @@ function ViewNotePage() {
     }
 
     const openChangeNoteForm = (id) => {
-        fetch(`http://localhost:5013/api/Notes/${id}`, {
+        fetch(`http://localhost:8088/api/Notes/${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `bearer ${jwtToken}`,
@@ -140,26 +152,40 @@ function ViewNotePage() {
         })
     })
 
+    let inputHandler = (e) => {
+        var lowerCase = e.target.value.toLowerCase();
+        setInputText(lowerCase);
+    };
+    const filteredData = note.filter((note) => {
+        if (inputHandler.input === '')
+            return note;
+        else
+            return note.title.toLowerCase().includes(inputText) || note.description.toLowerCase().includes(inputText)
+    })
+
     return (
         <div class="main">
             <div class="buttons">
-                <button class="add-note-button" style={{ padding: "10px" }} onClick={openAddNoteForm}>Add Note (Test)</button>
+                <button class="add-note-button" style={{ padding: "10px" }} onClick={openAddNoteForm}>Add Note</button>
                 <button class="delete-all-note-button" style={{ padding: "10px" }} onClick={deleteAllNotes}>Delete All notes (DevTest)</button>
             </div>
 
+            <input type="search" class="search" id="search" onChange={inputHandler}></input>
+
             <div class="notes-page" id="notes-container">
-                {note && note.length > 0 && note.map((noteObj, index) => (
-                    <div class="note" data-id={noteObj.id} key={index}>
+                {note && note.length > 0 && filteredData.map((noteObj, index) => (
+                    <div class="note" data-id={noteObj.id} key={noteObj.id}>
                         <h3>{noteObj.title}</h3>
                         <p>{noteObj.description}</p>
                     </div>
                 ))}
 
-                {/* modal window with form for add note to db or change current note*/}
                 <Modal active={modalActive} setActive={setModalActive}>
                     <input type="text" id="title" placeholder='Add title'></input>
                     <br />
+                    <br />
                     <textarea rows="4" cols="50" id="description" name="description" placeholder='Add description'></textarea>
+                    <br />
                     <br />
                     <button id="btnSave" class="btn-save" onClick={() => {
                         if (saveButton.dataset.id)

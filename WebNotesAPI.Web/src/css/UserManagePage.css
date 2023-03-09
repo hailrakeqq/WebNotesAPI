@@ -3,3 +3,11 @@
     display: flex;
     justify-content: center;
 }
+
+.main {
+    padding-left: 100px;
+}
+
+.main ul {
+    padding-left: 100px;
+}

@@ -2,10 +2,10 @@ import { Modal } from '../components/Modal.js';
 import React, { useEffect, useState } from 'react';
 import '../css/UserManagePage.css'
 import { useNavigate } from 'react-router-dom';
-
+import MyInput from "../components/MyInput";
+import MyButton from "../components/MyButton";
 
 /**
- * 
  * fix error when click on button which should open modal window works reques function also
  */
 function UserManagePage() {
@@ -17,8 +17,8 @@ function UserManagePage() {
     const succesfullyResponceMessage = "Your new data has been successfully saved"
     const errorResponceMessage = "An error has occurred when we try to change your new data :("
 
-    const getUser = () => {
-        fetch(`http://localhost:5013/api/User/${localStorage.getItem('id')}`, {
+    const getUser = () => {//5013
+        fetch(`http://localhost:8088/api/User/${localStorage.getItem('id')}`, {
             method: 'GET',
             headers: {
                 'Authorization': `bearer ${jwtToken}`,
@@ -32,7 +32,7 @@ function UserManagePage() {
     useEffect(() => getUser(), user)
 
     const createPUTRequest = (request, data) => {
-        const sendedRequest = fetch(`http://localhost:5013/api/User/${request}/${localStorage.getItem('id')}`, {
+        const sendedRequest = fetch(`http://localhost:8088/api/User/${request}/${localStorage.getItem('id')}`, {
             method: 'PUT',
             headers: {
                 'content-type': 'application/json',
@@ -78,7 +78,7 @@ function UserManagePage() {
             "<input type=\"text\" id=\"check-password\" placeholder='Password for confirm...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id='changeEmailBtn' class=\"btn-save\" type=\"submit\">Save</button>"
+            "<MyButton id='changeEmailBtn' class=\"btn-save\" type=\"submit\">Save</MyButton>"
 
         setModalActive(true)
         document.getElementById('changeEmailBtn').addEventListener('click', changeEmail)
@@ -120,7 +120,7 @@ function UserManagePage() {
             "<input type=\"text\" id=\"check-password\" placeholder='Password for confirm...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id='changeUsernameBtn' class=\"btn-save\" type=\"submit\">Save</button>"
+            "<MyButton id='changeUsernameBtn' class=\"btn-save\" type=\"submit\">Save</MyButton>"
 
         setModalActive(true)
         document.getElementById('changeUsernameBtn').addEventListener('click', changeUsername)
@@ -160,17 +160,16 @@ function UserManagePage() {
             "<input type=\"text\" id=\"new-password\" placeholder='Enter new password...'></input>" +
             "<br />" +
             "<br />" +
-            "<button id='changePasswordBtn' class=\"btn-save\" type=\"submit\" >Save</button>"
+            "<MyButton id='changePasswordBtn' class=\"btn-save\" type=\"submit\" >Save</MyButton>"
 
         setModalActive(true)
         document.getElementById('changePasswordBtn').addEventListener('click', changePassword)
     }
 
-
     const deleteAccount = () => {
         let confirmPassword = document.getElementById('confirmPassword').value
         if (confirmPassword !== "" || confirmPassword !== null) {
-            fetch(`http://localhost:5013/api/User/${localStorage.getItem('id')}`, {
+            fetch(`http://localhost:8088/api/User/${localStorage.getItem('id')}`, {
                 method: 'DELETE',
                 headers: {
                     'content-type': 'application/json',
@@ -195,7 +194,7 @@ function UserManagePage() {
     const deleteAccountModal = () => {
         modalContent.innerHTML =
             `<p>Delete Account</p><br/><input type='text' id='confirmPassword' placeholder='Enter password for confirm..'></input><br/><br/>` +
-            `<button id='btnDeleteAccount' class='btn-save' type='submit'>Delete Account</button>`
+            `<MyButton id='btnDeleteAccount' class='btn-save' type='submit'>Delete Account</MyButton>`
 
         setModalActive(true)
         document.getElementById('btnDeleteAccount').addEventListener('click', deleteAccount);
@@ -203,13 +202,16 @@ function UserManagePage() {
 
     return (
         <>
-            <h3>Test user manage page</h3>
-            <ul>
-                <li><p>Email: {user.email} <button class="manage-button" id="change-email-btn" onClick={changeEmailModal}>Change Email</button></p> </li>
-                <li><p>Username: {user.username} <button class="manage-button" id="change-username-btn" onClick={changeUsernameModal}>Change Username</button></p></li>
-                <li><p>Password <button class="manage-button" id="change-password-btn" onClick={changePasswordModal}>Change Password</button></p> </li>
-                <li><button id="delete-account-btn" onClick={deleteAccountModal}>Delete Account</button></li>
-            </ul>
+            <div class="main">
+                <MyButton onClick={() => navigate('/')}>Go to my note</MyButton>
+                <h3>User manage page</h3>
+                <ul>
+                    <li><p>Email: {user.email} <MyButton class="manage-button" id="change-email-btn" onClick={changeEmailModal}>Change Email</MyButton></p> </li>
+                    <li><p>Username: {user.username} <MyButton class="manage-button" id="change-username-btn" onClick={changeUsernameModal}>Change Username</MyButton></p></li>
+                    <li><p>Password <MyButton class="manage-button" id="change-password-btn" onClick={changePasswordModal}>Change Password</MyButton></p> </li>
+                    <li><MyButton id="delete-account-btn" onClick={deleteAccountModal}>Delete Account</MyButton></li>
+                </ul>
+            </div>
 
             <Modal active={modalActive} setActive={setModalActive}>
                 <div id="modal-content"></div>

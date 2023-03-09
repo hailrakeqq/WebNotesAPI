@@ -6,6 +6,7 @@ function LoginPage() {
     useEffect(() => {
         localStorage.clear()
     }, [])
+
     const Login = () => {
         let email = document.getElementById('email').value;
         let password = document.getElementById('password').value;
@@ -16,7 +17,7 @@ function LoginPage() {
                 password: password
             }
 
-            fetch('http://localhost:5013/api/User/Login', {
+            fetch('http://localhost:8088/api/User/Login', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'
@@ -29,7 +30,7 @@ function LoginPage() {
                         localStorage.setItem("username", data.username)
                         localStorage.setItem("role", data.role)
                         localStorage.setItem("jwttoken", data.jwtToken)
-                        navigate('/ViewNotePage');
+                        navigate('/');
                     })
                 else {
                     alert("you enter uncorrect data or account was not found")
@@ -48,7 +49,7 @@ function LoginPage() {
                 <input type="text" id="email" required="required" placeholder="E-mail" />
                 <input type="password" id="password" required="required" placeholder="Password" />
                 <button onClick={Login}>login</button>
-                <p class="message">Not registered? <a href="/SigninPage">Create an account</a></p>
+                <p class="message">Not registered? <a onClick={() => navigate('/SigninPage')}>Create an account</a></p>
             </div>
         </div>
     );

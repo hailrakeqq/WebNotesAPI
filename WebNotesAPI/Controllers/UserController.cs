@@ -14,11 +14,11 @@ namespace WebNotesAPI.Controllers;
 [ApiController]
 public class UserController : Controller
 {
-    private readonly NotesDbContext _context;
+    private readonly AppDbContext _context;
     private readonly ITokenService _tokenService;
     private readonly LoginResponce _loginResponce;
 
-    public UserController(NotesDbContext context, ITokenService tokenService, LoginResponce tokenResponce)
+    public UserController(AppDbContext context, ITokenService tokenService, LoginResponce tokenResponce)
     {
         _context = context;
         _tokenService = tokenService;
@@ -70,6 +70,17 @@ public class UserController : Controller
 
         return Unauthorized(currentUser);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllUser([FromHeader] string ownerId)
+    {
+        var user = await _context.users.FirstOrDefaultAsync(u => u.Id == ownerId && u.Role == "admin");
+
+        if (user != null)
+            return Ok(_context.users.ToList());
+        return NotFound();
+    }
+
 
     [HttpGet]
     [Route("{id:Guid}")]
@@ -144,19 +155,19 @@ public class UserController : Controller
 
     [HttpPut]
     [Route("PromoteToAdmin/{id:Guid}")]
-    public async Task<IActionResult> PromoteToAdmin([FromRoute] string id, [FromBody] string userWhoPromotedId)
+    public async Task<IActionResult> PromoteToAdmin([FromRoute] string id, [FromHeader] string adminId)
     {
         var existingUser = await _context.users.FirstOrDefaultAsync(u => u.Id == id);
-        var userWhoPromoted = await _context.users.FirstOrDefaultAsync(u => u.Id == userWhoPromotedId && u.Role == "admin");
+        var userWhoPromoted = await _context.users.FirstOrDefaultAsync(u => u.Id == adminId && u.Role == "admin");
 
         if (existingUser != null)
         {
-            if (userWhoPromoted != null)
+            if (userWhoPromoted != null && existingUser.Role != "admin")
                 existingUser.Role = "admin";
             await _context.SaveChangesAsync();
             return Ok($"User {existingUser.Username} was promoted to admin");
         }
-        return NotFound();
+        return NotFound("We can't find user, or user already had role \"admin\"");
     }
 
     [HttpDelete]
